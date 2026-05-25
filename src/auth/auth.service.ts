@@ -32,12 +32,13 @@ export class AuthService {
 
     const user = this.userRepository.create({
       ...registerDto,
-      password: hashedPassword,
+      password_hash: hashedPassword,
     });
 
     await this.userRepository.save(user);
 
-    const { password, ...result } = user;
+    const result = { ...user };
+    delete (result as { password_hash?: string }).password_hash;
     const token = this.generateToken(user);
 
     return {
@@ -55,22 +56,19 @@ export class AuthService {
       throw new UnauthorizedException('Credenciales inválidas');
     }
 
-    console.log(user)
-    
+    console.log(user);
+
     const isPasswordValid = await bcrypt.compare(
       loginDto.password,
-      user.password,
+      user.password_hash,
     );
 
     if (!isPasswordValid) {
       throw new UnauthorizedException('Credenciales inválidas');
     }
 
-    if (!user.isActive) {
-      throw new UnauthorizedException('Usuario inactivo');
-    }
-
-    const { password, ...result } = user;
+    const result = { ...user };
+    delete (result as { password_hash?: string }).password_hash;
     const token = this.generateToken(user);
 
     return {
@@ -79,9 +77,9 @@ export class AuthService {
     };
   }
 
-  async validateUser(userId: number): Promise<User> {
+  async validateUser(userId: string): Promise<User> {
     const user = await this.userRepository.findOne({
-      where: { id: userId, isActive: true },
+      where: { id: userId },
     });
 
     if (!user) {
@@ -95,7 +93,6 @@ export class AuthService {
     const payload = {
       sub: user.id,
       email: user.email,
-      role: user.role,
     };
 
     return this.jwtService.sign(payload);

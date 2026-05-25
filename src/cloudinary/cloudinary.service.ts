@@ -26,7 +26,10 @@ export class CloudinaryService {
         },
         (error, result) => {
           if (error) return reject(new BadRequestException(error.message));
-          if (!result) return reject(new BadRequestException('Error desconocido al subir archivo'));
+          if (!result)
+            return reject(
+              new BadRequestException('Error desconocido al subir archivo'),
+            );
           resolve(result);
         },
       );
@@ -44,6 +47,9 @@ export class CloudinaryService {
    * @param publicId - El public_id retornado al subir la imagen
    */
   async deleteFile(publicId: string): Promise<{ result: string }> {
-    return cloudinary.uploader.destroy(publicId);
+    const response = (await cloudinary.uploader.destroy(publicId)) as {
+      result: string;
+    };
+    return response;
   }
 }

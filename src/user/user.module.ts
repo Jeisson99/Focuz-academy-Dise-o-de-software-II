@@ -9,6 +9,6 @@ import { CloudinaryModule } from '../cloudinary/cloudinary.module';
   imports: [TypeOrmModule.forFeature([User]), CloudinaryModule],
   controllers: [UserController],
   providers: [UserService],
-   exports: [UserService],
+  exports: [UserService],
 })
 export class UserModule {}

@@ -1,4 +1,11 @@
-import { IsEmail, IsNotEmpty, IsString, MinLength } from 'class-validator';
+import {
+  IsEmail,
+  IsNotEmpty,
+  IsString,
+  MinLength,
+  IsEnum,
+  IsOptional,
+} from 'class-validator';
 
 export class CreateUserDto {
   // Validación de email con formato correcto
@@ -12,8 +19,15 @@ export class CreateUserDto {
   @IsNotEmpty({ message: 'La contraseña es obligatoria' })
   password: string;
 
-  // Validación de nombre completo
-  @IsString({ message: 'El nombre completo debe ser una cadena de texto' })
-  @IsNotEmpty({ message: 'El nombre completo es obligatorio' })
-  fullName: string;
+  // Validación de nombre
+  @IsString({ message: 'El nombre debe ser una cadena de texto' })
+  @IsNotEmpty({ message: 'El nombre es obligatorio' })
+  nombre: string;
+
+  // Rol del usuario
+  @IsOptional()
+  @IsEnum(['admin', 'profesor', 'alumno'], {
+    message: 'El rol debe ser admin, profesor o alumno',
+  })
+  rol?: string;
 }

@@ -4,8 +4,14 @@ import { TypeOrmModule } from '@nestjs/typeorm';
 import { UserModule } from './user/user.module';
 import { AuthModule } from './auth/auth.module';
 import { CloudinaryModule } from './cloudinary/cloudinary.module';
-import { CategoriaVideoModule } from './categoria-video/categoria-video.module';
-
+import { CursosModule } from './cursos/cursos.module';
+import { RetosModule } from './retos/retos.module';
+import { NivelesModule } from './niveles/niveles.module';
+import { ProgresoModule } from './progreso/progreso.module';
+import { GamificacionModule } from './gamificacion/gamificacion.module';
+import { SesionesUsoModule } from './sesiones-uso/sesiones-uso.module';
+import { AppController } from './app.controller';
+import { AppService } from './app.service';
 
 @Module({
   imports: [
@@ -37,9 +43,14 @@ import { CategoriaVideoModule } from './categoria-video/categoria-video.module';
 
     AuthModule,
     CloudinaryModule,
-    CategoriaVideoModule,
-
-
+    CursosModule,
+    RetosModule,
+    NivelesModule,
+    ProgresoModule,
+    GamificacionModule,
+    SesionesUsoModule,
   ],
+  controllers: [AppController],
+  providers: [AppService],
 })
 export class AppModule {}

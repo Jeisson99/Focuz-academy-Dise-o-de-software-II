@@ -1,7 +1,7 @@
-import { 
-  Injectable, 
-  ConflictException, 
-  NotFoundException 
+import {
+  Injectable,
+  ConflictException,
+  NotFoundException,
 } from '@nestjs/common';
 import { InjectRepository } from '@nestjs/typeorm';
 import { Repository } from 'typeorm';
@@ -40,7 +40,7 @@ export class UserService {
     // Crear nueva instancia de usuario
     const user = this.userRepository.create({
       ...createUserDto,
-      password: hashedPassword,
+      password_hash: hashedPassword,
     });
 
     // Guardar en la base de datos
@@ -58,13 +58,13 @@ export class UserService {
   /**
    * Obtener un usuario por ID
    */
-  async findOne(id: number): Promise<User> {
+  async findOne(id: string): Promise<User> {
     const user = await this.userRepository.findOne({ where: { id } });
-    
+
     if (!user) {
       throw new NotFoundException(`Usuario con ID ${id} no encontrado`);
     }
-    
+
     return user;
   }
 
@@ -75,23 +75,26 @@ export class UserService {
   async findOneByEmail(email: string) {
     return await this.userRepository.findOne({
       where: { email },
-      select: ['id', 'email', 'password', 'fullName', 'role', 'isActive'],
+      select: ['id', 'email', 'password_hash', 'nombre', 'rol'],
     });
   }
 
   /**
    * Actualizar un usuario
    */
-  async update(id: number, updateUserDto: UpdateUserDto): Promise<User> {
+  async update(id: string, updateUserDto: UpdateUserDto): Promise<User> {
     const user = await this.findOne(id);
 
     // Si se actualiza la contraseña, encriptarla
     if (updateUserDto.password) {
       updateUserDto.password = await bcrypt.hash(updateUserDto.password, 10);
+      user.password_hash = updateUserDto.password;
     }
 
     // Actualizar los campos
-    Object.assign(user, updateUserDto);
+    if (updateUserDto.nombre) user.nombre = updateUserDto.nombre;
+    if (updateUserDto.email) user.email = updateUserDto.email;
+    if (updateUserDto.rol) user.rol = updateUserDto.rol;
 
     return await this.userRepository.save(user);
   }
@@ -99,25 +102,8 @@ export class UserService {
   /**
    * Eliminar un usuario (soft delete)
    */
-  async remove(id: number) {
+  async remove(id: string) {
     const user = await this.findOne(id);
     await this.userRepository.remove(user);
-  }
-
-  /**
-   * Sube o actualiza la foto de perfil del usuario
-   */
-  async uploadAvatar(id: number, file: Express.Multer.File) {
-    const user = await this.findOne(id);
-
-    // Subimos la imagen a una carpeta específica en Cloudinary para mantener orden
-    const result = await this.cloudinaryService.uploadFile(
-      file,
-      `jwt_auth_project/users/${id}`,
-    );
-
-    // Guardamos la URL resultante en la base de datos
-    user.avatarUrl = result.secure_url;
-    return await this.userRepository.save(user);
   }
 }

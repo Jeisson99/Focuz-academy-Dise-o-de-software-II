@@ -1,0 +1,228 @@
+
+<style>
+#erd-wrap2 { padding: 8px 0; }
+#erd-wrap2 svg { width: 100%; height: auto; }
+#erd-wrap2 svg .edgeLabel { background-color: transparent !important; }
+#erd-wrap2 svg .edgeLabel span,
+#erd-wrap2 svg .edgeLabel p,
+#erd-wrap2 svg .edgeLabel foreignObject div {
+  background: var(--color-background-primary) !important;
+  color: #1D9E75 !important;
+  font-weight: 600 !important;
+  font-size: 11px !important;
+  padding: 1px 4px !important;
+  border-radius: 3px !important;
+  border: 1px solid #1D9E75 !important;
+}
+.mermaid-loading2 { color: var(--color-text-secondary); font-size: 13px; padding: 12px; }
+</style>
+<div id="erd-wrap2"><div class="mermaid-loading2">Cargando diagrama...</div></div>
+<script type="module">
+import mermaid from 'https://esm.sh/mermaid@11/dist/mermaid.esm.min.mjs';
+const dark = matchMedia('(prefers-color-scheme: dark)').matches;
+await document.fonts.ready;
+mermaid.initialize({
+  startOnLoad: false,
+  theme: 'base',
+  fontFamily: '"Anthropic Sans", sans-serif',
+  themeVariables: {
+    darkMode: dark,
+    fontSize: '12px',
+    fontFamily: '"Anthropic Sans", sans-serif',
+    lineColor: dark ? '#9c9a92' : '#73726c',
+    textColor: dark ? '#c2c0b6' : '#3d3d3a',
+    primaryColor: dark ? '#2a2860' : '#EEEDFE',
+    primaryBorderColor: dark ? '#534AB7' : '#7F77DD',
+    primaryTextColor: dark ? '#c2c0b6' : '#3d3d3a',
+    edgeLabelBackground: dark ? '#1a1a1a' : '#ffffff',
+    attributeBackgroundColorEven: dark ? '#1e2a1e' : '#f4fbf8',
+    attributeBackgroundColorOdd: dark ? '#161f16' : '#ffffff',
+  },
+});
+
+const diagram = `erDiagram
+  USUARIO {
+    uuid id PK
+    string nombre
+    string email
+    string password_hash
+    enum rol "admin, profesor, alumno"
+    timestamp fecha_registro
+    timestamp ultimo_acceso
+  }
+
+  CURSO {
+    uuid id PK
+    string titulo
+    string descripcion
+    string url_video_intro
+    uuid profesor_id FK
+    enum estado "borrador, publicado, archivado"
+    timestamp creado_en
+  }
+
+  NIVEL {
+    uuid id PK
+    uuid curso_id FK
+    int orden
+    string titulo
+    string descripcion
+    string url_video
+    boolean es_obligatorio
+  }
+
+  RETO {
+    uuid id PK
+    uuid nivel_id FK
+    string titulo
+    string descripcion
+    string tipo "quiz, codigo, proyecto"
+    int intentos_max
+    int puntaje_base
+  }
+
+  GUIA_IMPLEMENTACION {
+    uuid id PK
+    uuid nivel_id FK
+    string titulo
+    text contenido
+    string url_recurso
+  }
+
+  INSCRIPCION {
+    uuid id PK
+    uuid usuario_id FK
+    uuid curso_id FK
+    timestamp fecha_inscripcion
+    enum estado "activo, completado, abandonado"
+  }
+
+  PROGRESO_NIVEL {
+    uuid id PK
+    uuid inscripcion_id FK
+    uuid nivel_id FK
+    boolean completado
+    timestamp fecha_inicio
+    timestamp fecha_fin
+    int tiempo_total_seg
+    int veces_visto_video
+  }
+
+  INTENTO_RETO {
+    uuid id PK
+    uuid progreso_nivel_id FK
+    uuid reto_id FK
+    int numero_intento
+    int puntaje_obtenido
+    boolean aprobado
+    timestamp realizado_en
+    int duracion_seg
+  }
+
+  GAMIFICACION_CURSO {
+    uuid id PK
+    uuid inscripcion_id FK
+    int puntos_acumulados
+    int nivel_xp
+    int racha_actual_dias
+    int racha_maxima_dias
+    int total_retos_aprobados
+    int tiempo_total_plataforma_seg
+    timestamp actualizado_en
+  }
+
+  LOGRO {
+    uuid id PK
+    uuid curso_id FK
+    string nombre
+    string descripcion
+    string icono_url
+    string tipo "racha, velocidad, precision, constancia"
+    int umbral
+  }
+
+  USUARIO_LOGRO {
+    uuid id PK
+    uuid gamificacion_curso_id FK
+    uuid logro_id FK
+    timestamp obtenido_en
+  }
+
+  SESION_USO {
+    uuid id PK
+    uuid inscripcion_id FK
+    timestamp inicio
+    timestamp fin
+    int duracion_seg
+    date fecha
+  }
+
+  USUARIO ||--o{ CURSO : "imparte"
+  USUARIO ||--o{ INSCRIPCION : "realiza"
+  CURSO ||--o{ NIVEL : "contiene"
+  CURSO ||--o{ LOGRO : "define"
+  NIVEL ||--o{ RETO : "incluye"
+  NIVEL ||--|| GUIA_IMPLEMENTACION : "tiene"
+  INSCRIPCION ||--o{ PROGRESO_NIVEL : "registra"
+  INSCRIPCION ||--|| GAMIFICACION_CURSO : "genera"
+  INSCRIPCION ||--o{ SESION_USO : "acumula"
+  PROGRESO_NIVEL ||--o{ INTENTO_RETO : "produce"
+  RETO ||--o{ INTENTO_RETO : "recibe"
+  GAMIFICACION_CURSO ||--o{ USUARIO_LOGRO : "desbloquea"
+  LOGRO ||--o{ USUARIO_LOGRO : "otorgado_en"
+`;
+
+try {
+  const { svg } = await mermaid.render('erd-main2', diagram);
+  document.getElementById('erd-wrap2').innerHTML = svg;
+
+  document.querySelectorAll('#erd-wrap2 svg .node').forEach(node => {
+    const firstPath = node.querySelector('path[d]');
+    if (!firstPath) return;
+    const d = firstPath.getAttribute('d');
+    const nums = d.match(/-?[\d.]+/g)?.map(Number);
+    if (!nums || nums.length < 8) return;
+    const xs = [nums[0], nums[2], nums[4], nums[6]];
+    const ys = [nums[1], nums[3], nums[5], nums[7]];
+    const x = Math.min(...xs), y = Math.min(...ys);
+    const w = Math.max(...xs) - x, h = Math.max(...ys) - y;
+    const rect = document.createElementNS('http://www.w3.org/2000/svg', 'rect');
+    rect.setAttribute('x', x); rect.setAttribute('y', y);
+    rect.setAttribute('width', w); rect.setAttribute('height', h);
+    rect.setAttribute('rx', '8');
+    for (const a of ['fill', 'stroke', 'stroke-width', 'class', 'style']) {
+      if (firstPath.hasAttribute(a)) rect.setAttribute(a, firstPath.getAttribute(a));
+    }
+    firstPath.replaceWith(rect);
+  });
+
+  document.querySelectorAll('#erd-wrap2 svg .row-rect-odd path, #erd-wrap2 svg .row-rect-even path').forEach(p => {
+    p.setAttribute('stroke', 'none');
+  });
+
+  // Style edge labels for visibility
+  document.querySelectorAll('#erd-wrap2 svg .edgeLabel').forEach(label => {
+    const fo = label.querySelector('foreignObject');
+    if (fo) {
+      const div = fo.querySelector('div');
+      if (div) {
+        div.style.cssText = `
+          background: ${dark ? '#083828' : '#E1F5EE'} !important;
+          color: ${dark ? '#5DCAA5' : '#0F6E56'} !important;
+          font-weight: 600 !important;
+          font-size: 11px !important;
+          padding: 2px 6px !important;
+          border-radius: 4px !important;
+          border: 1px solid ${dark ? '#1D9E75' : '#1D9E75'} !important;
+          white-space: nowrap !important;
+          display: inline-block !important;
+        `;
+      }
+    }
+  });
+
+} catch(e) {
+  document.getElementById('erd-wrap2').innerHTML = '<p style="color:var(--color-text-secondary);font-size:13px;padding:8px">Error al renderizar el diagrama.</p>';
+  console.error(e);
+}
+</script>

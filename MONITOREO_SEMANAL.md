@@ -8,8 +8,8 @@
 | :--- | :--- | :--- | :--- |
 | [Juan Diego Martinez Hernandez] | Líder / Scrum Master | Jueves 4:00 p.m. – 6:00 p.m. | @Darky10s |
 | [Luis Angel Enamorado Salcedo] | Desarrollador Frontend | Viernes 10:00 a.m. – 12:00 p.m. | @usuario2 |
-| [Jeffrey Steven Reyes Pereira] | Desarrollador Backend | Martes 2:00 p.m. – 4:00 p.m. | @usuario3 |
-| [Daniela Torres] | Diseñador UI/UX & Instruccional | Miércoles 3:00 p.m. – 5:00 p.m. | @strawberry200421  |
+| [Jeffrey Steven Reyes Pereira] | Desarrollador Backend | Jueves y viernes 2:00 p.m. – 4:00 p.m. | @usuario3 |
+| [Daniela Torres] | Diseñador UI/UX & Instruccional | Jueves y viernes 2:00 p.m. – 4:00 p.m. | @strawberry200421  |
 | [Jeisson Yesid Martinez Perez] | Documentador | Martes 2:00 p.m. – 4:00 p.m. | @Jeisson99 |
 
 ---

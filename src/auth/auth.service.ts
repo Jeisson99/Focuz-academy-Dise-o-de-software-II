@@ -1,0 +1,135 @@
+import {
+  Injectable,
+  UnauthorizedException,
+  ConflictException,
+} from '@nestjs/common';
+import { JwtService } from '@nestjs/jwt';
+import { InjectRepository } from '@nestjs/typeorm';
+import { Repository } from 'typeorm';
+import * as bcrypt from 'bcrypt';
+import { User } from '../user/entities/user.entity';
+import { RegisterDto } from './dto/register.dto';
+import { LoginDto } from './dto/login.dto';
+
+@Injectable()
+export class AuthService {
+  constructor(
+    @InjectRepository(User)
+    private userRepository: Repository<User>,
+    private jwtService: JwtService,
+  ) {}
+
+  async register(registerDto: RegisterDto) {
+    const existingUser = await this.userRepository.findOne({
+      where: { email: registerDto.email },
+    });
+
+    if (existingUser) {
+      throw new ConflictException('El email ya está registrado');
+    }
+
+    const hashedPassword = await bcrypt.hash(registerDto.password, 10);
+
+    const user = this.userRepository.create({
+      ...registerDto,
+      password_hash: hashedPassword,
+    });
+
+    await this.userRepository.save(user);
+
+    const result = { ...user };
+    delete (result as { password_hash?: string }).password_hash;
+    const token = this.generateToken(user);
+
+    return {
+      user: result,
+      access_token: token,
+    };
+  }
+
+  async login(loginDto: LoginDto) {
+    const user = await this.userRepository.findOne({
+      where: { email: loginDto.email },
+    });
+
+    if (!user) {
+      throw new UnauthorizedException('Credenciales inválidas');
+    }
+
+    console.log(user);
+
+    const isPasswordValid = await bcrypt.compare(
+      loginDto.password,
+      user.password_hash,
+    );
+
+    if (!isPasswordValid) {
+      throw new UnauthorizedException('Credenciales inválidas');
+    }
+
+    const result = { ...user };
+    delete (result as { password_hash?: string }).password_hash;
+    const token = this.generateToken(user);
+
+    return {
+      user: result,
+      access_token: token,
+    };
+  }
+
+  async validateUser(userId: string): Promise<User> {
+    const user = await this.userRepository.findOne({
+      where: { id: userId },
+    });
+
+    if (!user) {
+      throw new UnauthorizedException('Usuario no válido');
+    }
+
+    return user;
+  }
+
+  async validateOrCreateGoogleUser(googleUser: {
+    email: string;
+    nombre: string;
+    foto?: string;
+  }) {
+    let user = await this.userRepository.findOne({
+      where: { email: googleUser.email },
+    });
+
+    if (!user) {
+      // Si el usuario no existe, lo creamos automáticamente como alumno
+      const randomPassword =
+        Math.random().toString(36).slice(-10) + Date.now();
+      const hashedPassword = await bcrypt.hash(randomPassword, 10);
+
+      user = this.userRepository.create({
+        nombre: googleUser.nombre || 'Usuario Google',
+        email: googleUser.email,
+        password_hash: hashedPassword,
+        rol: 'alumno',
+      });
+
+      await this.userRepository.save(user);
+    }
+
+    const token = this.generateToken(user);
+    const result = { ...user };
+    delete (result as { password_hash?: string }).password_hash;
+
+    return {
+      user: result,
+      access_token: token,
+    };
+  }
+
+  private generateToken(user: User): string {
+    const payload = {
+      sub: user.id,
+      email: user.email,
+    };
+
+    return this.jwtService.sign(payload);
+  }
+}

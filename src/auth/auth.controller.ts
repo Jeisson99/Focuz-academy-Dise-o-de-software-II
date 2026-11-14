@@ -18,6 +18,7 @@ import { GoogleAuthGuard } from './guards/google-auth.guard';
 interface AuthenticatedRequest extends ExpressRequest {
   user: {
     id: string;
+    nombre: string;
     email: string;
     rol: string;
   };

@@ -9,7 +9,8 @@ async function runSeed() {
   console.log('🌱 Iniciando semillero de datos (Seed)...');
 
   const host = process.env.DB_HOST || 'localhost';
-  const isRemote = host !== 'localhost' && host !== '127.0.0.1';
+  const dbSsl = process.env.DB_SSL;
+  const useSsl = dbSsl === 'true' || dbSsl === '1';
 
   const connection = await mysql.createConnection({
     host: host,
@@ -17,7 +18,7 @@ async function runSeed() {
     user: process.env.DB_USERNAME || 'root',
     password: process.env.DB_PASSWORD || 'root',
     database: process.env.DB_DATABASE || 'unicor_db',
-    ssl: isRemote ? { rejectUnauthorized: false } : undefined,
+    ssl: useSsl ? { rejectUnauthorized: false } : undefined,
   });
 
   try {

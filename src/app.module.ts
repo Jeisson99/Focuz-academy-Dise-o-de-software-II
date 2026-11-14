@@ -28,7 +28,8 @@ import { AppService } from './app.service';
       imports: [ConfigModule],
       useFactory: (configService: ConfigService) => {
         const host = configService.get<string>('DB_HOST');
-        const isRemote = host && host !== 'localhost' && host !== '127.0.0.1';
+        const dbSsl = configService.get<string>('DB_SSL');
+        const useSsl = dbSsl === 'true' || dbSsl === '1';
         return {
           type: 'mysql',
           host: host,
@@ -38,7 +39,7 @@ import { AppService } from './app.service';
           database: configService.get('DB_DATABASE'),
           entities: [__dirname + '/**/*.entity{.ts,.js}'],
           synchronize: true, // ⚠️ Solo en desarrollo
-          ssl: isRemote ? { rejectUnauthorized: false } : false,
+          ssl: useSsl ? { rejectUnauthorized: false } : false,
         };
       },
       inject: [ConfigService],

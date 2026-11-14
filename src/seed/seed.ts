@@ -134,18 +134,18 @@ async function runSeed() {
         ],
       },
       {
-        titulo: 'Estructuras de Datos y Complejidad',
-        descripcion: 'Domina arreglos, listas enlazadas, pilas, colas, árboles y grafos optimizando recursos de memoria y tiempo computacional.',
+        titulo: 'Python para Ciencia de Datos',
+        descripcion: 'Aprende análisis exploratorio de datos, manipulación con Pandas, cálculo numérico con NumPy y visualización avanzada con Matplotlib y Seaborn.',
         estado: 'publicado',
         niveles: [
           {
             orden: 1,
-            titulo: 'Nivel 1: Arreglos y Matrices Dinámicas',
-            descripcion: 'Indexación, recorrido e inserción en estructuras lineales.',
+            titulo: 'Nivel 1: Fundamentos de NumPy y Matrices',
+            descripcion: 'Creación de ndarrays, indexación booleana y operaciones vectorizadas.',
             retos: [
               {
-                titulo: 'Reto 1: Complejidad en Arreglos',
-                descripcion: '¿Cuál es la complejidad temporal de una búsqueda binaria en un arreglo ordenado?',
+                titulo: 'Reto 1: Operaciones Vectorizadas',
+                descripcion: '¿Cómo sumar dos arrays de NumPy elemento a elemento sin usar bucles for?',
                 tipo: 'quiz',
                 puntaje: 60,
               },
@@ -153,20 +153,134 @@ async function runSeed() {
           },
           {
             orden: 2,
-            titulo: 'Nivel 2: Pilas y Colas (LIFO / FIFO)',
-            descripcion: 'Implementación de colas de prioridad y pilas para evaluación sintáctica.',
+            titulo: 'Nivel 2: Limpieza y Manipulación con Pandas',
+            descripcion: 'DataFrames, manejo de valores nulos, filtrado y agregaciones con groupby.',
             retos: [
               {
-                titulo: 'Reto 2: Verificación de Paréntesis Balanceados',
-                descripcion: 'Aplica una pila para verificar si los símbolos de agrupación coinciden.',
+                titulo: 'Reto 2: Filtrado de DataFrames',
+                descripcion: 'Escribe la consulta para filtrar filas donde la columna "edad" sea mayor a 25 y "salario" no sea nulo.',
                 tipo: 'codigo',
+                puntaje: 80,
+              },
+            ],
+          },
+          {
+            orden: 3,
+            titulo: 'Nivel 3: Visualización y Análisis Exploratorio (EDA)',
+            descripcion: 'Gráficos de dispersión, histogramas, mapas de calor de correlación y detección de outliers.',
+            retos: [
+              {
+                titulo: 'Reto 3: Mapa de Correlación',
+                descripcion: 'Interpreta una matriz de correlación de Pearson y selecciona la variable con mayor correlación positiva.',
+                tipo: 'quiz',
+                puntaje: 100,
+              },
+            ],
+          },
+        ],
+        logros: [
+          { nombre: 'Científico Novato', descripcion: 'Completar el primer reto de manipulación de arrays', tipo: 'constancia', umbral: 1 },
+          { nombre: 'Maestro de Datos', descripcion: 'Completar todos los niveles del curso de Python para Datos', tipo: 'precision', umbral: 3 },
+        ],
+      },
+      {
+        titulo: 'Git y GitHub Profesional',
+        descripcion: 'Domina el control de versiones moderno: ramas, merge, rebase interactivo, resolución de conflictos, pull requests y flujos de trabajo colaborativos.',
+        estado: 'publicado',
+        niveles: [
+          {
+            orden: 1,
+            titulo: 'Nivel 1: Flujo Local y Estados de Git',
+            descripcion: 'Working Directory, Staging Area, Commits atómicos e inspección con git log y git diff.',
+            retos: [
+              {
+                titulo: 'Reto 1: El Área de Preparación (Staging)',
+                descripcion: '¿Qué comando agrega cambios únicamente en archivos específicos antes del commit?',
+                tipo: 'quiz',
+                puntaje: 50,
+              },
+            ],
+          },
+          {
+            orden: 2,
+            titulo: 'Nivel 2: Ramas, Fusiones y Conflictos',
+            descripcion: 'Estrategias de ramificación (feature branches), git merge vs git rebase y resolución de marcas de conflicto.',
+            retos: [
+              {
+                titulo: 'Reto 2: Resolución de Conflicto en Merge',
+                descripcion: 'Identifica la sección que debe conservarse al resolver un conflicto entre HEAD y la rama entrante.',
+                tipo: 'codigo',
+                puntaje: 85,
+              },
+            ],
+          },
+          {
+            orden: 3,
+            titulo: 'Nivel 3: GitHub, Pull Requests y Code Review',
+            descripcion: 'Forks, Pull Requests, protección de ramas principales, GitHub Actions y buenas prácticas de colaboración.',
+            retos: [
+              {
+                titulo: 'Reto 3: Creación de Pull Request',
+                descripcion: 'Describe los pasos para abrir un Pull Request limpio con commits ordenados hacia la rama main.',
+                tipo: 'quiz',
                 puntaje: 90,
               },
             ],
           },
         ],
         logros: [
-          { nombre: 'Estructurador Junior', descripcion: 'Superar los retos de arreglos y matrices', tipo: 'velocidad', umbral: 1 },
+          { nombre: 'Controlador de Versiones', descripcion: 'Aprobar el reto del flujo local de Git', tipo: 'velocidad', umbral: 1 },
+          { nombre: 'Colaborador Open Source', descripcion: 'Completar el nivel avanzado de GitHub y PRs', tipo: 'precision', umbral: 3 },
+        ],
+      },
+      {
+        titulo: 'Desarrollo Web con Vue 3',
+        descripcion: 'Construye aplicaciones web interactivas y reactivas utilizando Vue 3, Composition API, Script Setup, Pinia para estado global y Vue Router.',
+        estado: 'publicado',
+        niveles: [
+          {
+            orden: 1,
+            titulo: 'Nivel 1: Reactividad y Composition API',
+            descripcion: 'Uso de ref, reactive, computed y directivas esenciales (v-if, v-for, v-model).',
+            retos: [
+              {
+                titulo: 'Reto 1: Variables Reactivas con ref()',
+                descripcion: '¿Cómo se accede y modifica el valor de una variable creada con ref() en la sección script?',
+                tipo: 'quiz',
+                puntaje: 55,
+              },
+            ],
+          },
+          {
+            orden: 2,
+            titulo: 'Nivel 2: Componentes y Comunicación',
+            descripcion: 'Props tipadas, emits de eventos personalizados, slots y ciclo de vida de componentes.',
+            retos: [
+              {
+                titulo: 'Reto 2: Emisión de Eventos (defineEmits)',
+                descripcion: 'Escribe el código para emitir un evento personalizado "updateUser" con un payload de datos.',
+                tipo: 'codigo',
+                puntaje: 80,
+              },
+            ],
+          },
+          {
+            orden: 3,
+            titulo: 'Nivel 3: Manejo de Estado con Pinia',
+            descripcion: 'Stores modulares, state reactivo, getters derivados y actions asíncronas para conectar con APIs REST.',
+            retos: [
+              {
+                titulo: 'Reto 3: Store de Autenticación',
+                descripcion: 'Diseña una action en Pinia para autenticar un usuario y guardar el JWT recibido.',
+                tipo: 'codigo',
+                puntaje: 95,
+              },
+            ],
+          },
+        ],
+        logros: [
+          { nombre: 'Vue Developer', descripcion: 'Primer reto de reactividad completado', tipo: 'constancia', umbral: 1 },
+          { nombre: 'Frontend Architect', descripcion: 'Dominar Vue 3 y gestión de estado con Pinia', tipo: 'precision', umbral: 3 },
         ],
       },
     ];

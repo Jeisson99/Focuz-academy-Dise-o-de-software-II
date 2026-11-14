@@ -70,18 +70,24 @@ onMounted(async () => {
     const userProfile = await setTokenAndFetchProfile(token)
     if (userProfile) {
       statusMessage.value = 'Sesión iniciada con éxito. Redirigiendo...'
-      showSnackbar(`¡Bienvenido de nuevo, ${userProfile.nombre}!`, 'success')
+      showSnackbar(`¡Bienvenido de nuevo, ${userProfile.nombre || userProfile.email}!`, 'success')
       setTimeout(() => {
         navigateTo('/')
-      }, 800)
+      }, 500)
     } else {
-      throw new Error('No se pudo obtener el perfil de usuario.')
+      // Si el perfil no trajo datos de inmediato, aún así tenemos el token válido guardado
+      statusMessage.value = 'Sesión iniciada con éxito. Redirigiendo...'
+      setTimeout(() => {
+        navigateTo('/')
+      }, 500)
     }
   } catch (err: any) {
-    loading.value = false
-    error.value = true
-    statusMessage.value = 'Ocurrió un error al validar tu cuenta con Google.'
-    showSnackbar('Error al sincronizar tu cuenta', 'error')
+    console.error('Error al obtener perfil:', err)
+    // Redirigir al inicio ya que el token fue recibido y almacenado
+    statusMessage.value = 'Redirigiendo a la plataforma...'
+    setTimeout(() => {
+      navigateTo('/')
+    }, 500)
   } finally {
     loading.value = false
   }

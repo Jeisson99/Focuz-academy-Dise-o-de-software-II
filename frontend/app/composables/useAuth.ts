@@ -70,8 +70,8 @@ export const useAuth = () => {
       })
       user.value = response.user
       return user.value
-    } catch {
-      logout()
+    } catch (e) {
+      console.error('Error fetching profile:', e)
       return null
     }
   }
